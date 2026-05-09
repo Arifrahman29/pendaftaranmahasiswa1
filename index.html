@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>UTS - Pendaftaran (Gedung A/B) + Kode Tes & Bulan</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      body {
+        background: #eef2f7;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+      h1 {
+        text-align: center;
+        color: #1e3c72;
+        border-left: 5px solid #2a5298;
+        padding-left: 15px;
+        margin-bottom: 25px;
+        font-size: 26px;
+      }
+      .form-section {
+        background: #f9fbfe;
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+      /* INPUT KE BAWAH (VERTIKAL) */
+      .form-vertical {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .input-group label {
+        font-weight: 700;
+        color: #0a2f44;
+        font-size: 14px;
+      }
+      .input-group input,
+      .input-group select {
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 14px;
+        font-size: 15px;
+        transition: 0.2s;
+        background: white;
+      }
+      .input-group input:focus,
+      .input-group select:focus {
+        border-color: #2a5298;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+      }
+      input[readonly] {
+        background: #eef2ff;
+        font-weight: 500;
+        font-family: monospace;
+      }
+      button {
+        background: #1e3c72;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+        margin-top: 12px;
+        margin-right: 12px;
+        transition: 0.2s;
+      }
+      button:hover {
+        background: #0f2b4f;
+        transform: scale(1.02);
+      }
+      .btn-danger {
+        background: #b22234;
+      }
+      .btn-danger:hover {
+        background: #8b1a1a;
+      }
+      .btn-secondary {
+        background: #6c757d;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid #cfdee9;
+        padding: 10px 6px;
+        text-align: center;
+      }
+      th {
+        background: #1e3c72;
+        color: white;
+        position: sticky;
+        top: 0;
+      }
+      .stat-box {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin: 20px 0 10px;
+      }
+      .card-stat {
+        background: #e9eff8;
+        padding: 10px 18px;
+        border-radius: 30px;
+        font-weight: bold;
+      }
+      .lulus {
+        color: #2e7d32;
+        font-weight: bold;
+      }
+      .cadangan {
+        color: #e67e22;
+        font-weight: bold;
+      }
+      .tidak {
+        color: #c62828;
+        font-weight: bold;
+      }
+      .gedung-a {
+        background: #d4e6f1;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 11px;
+      }
+      .gedung-b {
+        background: #f9e0c7;
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 11px;
+      }
+      footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 12px;
+        color: gray;
+      }
+      hr {
+        margin: 20px 0;
+      }
+      .kode-example {
+        background: #f1f3f5;
+        padding: 8px;
+        border-radius: 14px;
+        font-family: monospace;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📌 UTS PENDATAAN PESERTA<br /><span style="font-size: 16px">Gedung A / B | Format Kode: [TesKode]-[NoUrut]-[Bulan]</span></h1>
+
+      <!-- FORM INPUT KE BAWAH (VERTIKAL) -->
+      <div class="form-section">
+        <h3>📝 Form Pendaftaran</h3>
+        <div class="form-vertical">
+          <div class="input-group">
+            <label>🏢 Gedung Lokasi Tes</label>
+            <select id="gedung">
+              <option value="A">Gedung A</option>
+              <option value="B">Gedung B</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>🔠 Kode Tes (2 karakter awal, misal: A2, B5, C1)</label>
+            <input
+              type="text"
+              id="kodeTes"
+              placeholder="Contoh: A2"
+              maxlength="2"
+              style="text-transform: uppercase"
+            />
+          </div>
+          <div class="input-group">
+            <label>📅 Bulan Tes (1 digit, 1-12)</label>
+            <input
+              type="number"
+              id="bulanTes"
+              min="1"
+              max="12"
+              value="9"
+            />
+          </div>
+          <div class="input-group">
+            <label>🔢 KODE PENDAFTARAN LENGKAP (Otomatis)</label>
+            <input
+              type="text"
+              id="kodeDaftar"
+              readonly
+            />
+          </div>
+          <div class="input-group">
+            <label>👤 Nama Lengkap</label>
+            <input
+              type="text"
+              id="nama"
+              placeholder="Nama peserta"
+            />
+          </div>
+          <div class="input-group">
+            <label>📍 Alamat</label>
+            <input
+              type="text"
+              id="alamat"
+              placeholder="Alamat"
+            />
+          </div>
+          <div class="input-group">
+            <label>📞 No HP</label>
+            <input
+              type="text"
+              id="nohp"
+              placeholder="Nomor HP"
+            />
+          </div>
+          <div class="input-group">
+            <label>📐 Nilai Matematika (0-100)</label>
+            <input
+              type="number"
+              id="mat"
+              min="0"
+              max="100"
+              value="70"
+            />
+          </div>
+          <div class="input-group">
+            <label>🇬🇧 Nilai Bahasa Inggris (0-100)</label>
+            <input
+              type="number"
+              id="inggris"
+              min="0"
+              max="100"
+              value="70"
+            />
+          </div>
+          <div class="input-group">
+            <label>📖 Nilai Pengetahuan Umum (0-100)</label>
+            <input
+              type="number"
+              id="umum"
+              min="0"
+              max="100"
+              value="70"
+            />
+          </div>
+          <div style="margin-top: 8px">
+            <button id="btnTambah">➕ Tambah Peserta</button>
+            <button
+              id="btnResetForm"
+              class="btn-secondary"
+            >
+              🔄 Reset Form
+            </button>
+          </div>
+        </div>
+        <div
+          class="kode-example"
+          style="margin-top: 15px"
+        >
+          💡 Contoh format kode: <strong>A2-101-9</strong> = Gedung A, KodeTes A2, NoUrut 101, Bulan 9<br />
+          ✨ Kode akan otomatis dibuat berdasarkan data yang sudah ada (no urut terakhir +1)
+        </div>
+      </div>
+
+      <!-- TABEL DATA -->
+      <h3>📋 Daftar Peserta & Hasil Kelulusan</h3>
+      <div style="overflow-x: auto">
+        <table id="tabelUtama">
+          <thead>
+            <tr>
+              <th>Kode Pendaftaran</th>
+              <th>Gedung</th>
+              <th>Nama</th>
+              <th>Alamat</th>
+              <th>No HP</th>
+              <th>MAT</th>
+              <th>ING</th>
+              <th>UMUM</th>
+              <th>Rata2</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyPeserta">
+            <tr>
+              <td
+                colspan="10"
+                style="text-align: center"
+              >
+                Belum ada data
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- STATISTIK -->
+      <div class="stat-box">
+        <div class="card-stat">✅ Lulus: <span id="jmlLulus">0</span></div>
+        <div class="card-stat">⚠️ Cadangan: <span id="jmlCadangan">0</span></div>
+        <div class="card-stat">❌ Tidak Lulus: <span id="jmlTidak">0</span></div>
+        <div class="card-stat">👥 Total Peserta: <span id="totalPeserta">0</span></div>
+      </div>
+      <button
+        id="btnResetSemua"
+        class="btn-danger"
+      >
+        🗑️ Reset Semua Data
+      </button>
+
+      <footer>✅ Kode otomatis: [KodeTes]-[NoUrut 3 digit]-[Bulan] | Gedung A/B ditentukan dari pilihan.</footer>
+    </div>
+
+    <script>
+      // Data peserta
+      let pesertaList = [];
+
+      // Fungsi generate nomor urut (3 digit, berdasarkan panjang array +1)
+      function getNextUrut() {
+        let next = pesertaList.length + 1;
+        return String(next).padStart(3, '0');
+      }
+
+      // Update tampilan kode otomatis di form (berdasarkan input kodeTes & bulanTes)
+      function updateKodeForm() {
+        let kodeTes = document.getElementById('kodeTes').value.trim().toUpperCase();
+        let bulan = document.getElementById('bulanTes').value;
+        if (kodeTes === '') {
+          document.getElementById('kodeDaftar').value = 'Isi kode tes dulu';
+          return;
+        }
+        let nextUrut = getNextUrut();
+        let fullKode = `${kodeTes}-${nextUrut}-${bulan}`;
+        document.getElementById('kodeDaftar').value = fullKode;
+      }
+
+      // Hitung status berdasar rata-rata
+      function hitungRataDanStatus(mat, ing, umum) {
+        let rata = (mat + ing + umum) / 3;
+        let status = '';
+        if (rata >= 70) status = 'Lulus';
+        else if (rata >= 60 && rata < 70) status = 'Cadangan';
+        else status = 'Tidak Lulus';
+        return { rata: rata.toFixed(2), status: status };
+      }
+
+      // Render tabel & update statistik
+      function renderTabel() {
+        let tbody = document.getElementById('tbodyPeserta');
+        if (pesertaList.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">📭 Belum ada data peserta</td></tr>';
+          document.getElementById('jmlLulus').innerText = '0';
+          document.getElementById('jmlCadangan').innerText = '0';
+          document.getElementById('jmlTidak').innerText = '0';
+          document.getElementById('totalPeserta').innerText = '0';
+          return;
+        }
+
+        let lulusCount = 0,
+          cadanganCount = 0,
+          tidakCount = 0;
+        let html = '';
+        for (let p of pesertaList) {
+          if (p.status === 'Lulus') lulusCount++;
+          else if (p.status === 'Cadangan') cadanganCount++;
+          else tidakCount++;
+
+          let badgeGedung = p.gedung === 'A' ? '🏢 Gedung A' : '🏠 Gedung B';
+          let classGedung = p.gedung === 'A' ? 'gedung-a' : 'gedung-b';
+
+          html += `<tr>
+                        <td><strong>${p.kodeLengkap}</strong></td>
+                        <td><span class="${classGedung}">${badgeGedung}</span></td>
+                        <td>${escapeHtml(p.nama)}</td>
+                        <td>${escapeHtml(p.alamat)}</td>
+                        <td>${escapeHtml(p.nohp)}</td>
+                        <td>${p.mat}</td><td>${p.inggris}</td><td>${p.umum}</td>
+                        <td>${p.rata}</td>
+                        <td class="${p.status === 'Lulus' ? 'lulus' : p.status === 'Cadangan' ? 'cadangan' : 'tidak'}">${p.status}</td>
+                     </tr>`;
+        }
+        tbody.innerHTML = html;
+        document.getElementById('jmlLulus').innerText = lulusCount;
+        document.getElementById('jmlCadangan').innerText = cadanganCount;
+        document.getElementById('jmlTidak').innerText = tidakCount;
+        document.getElementById('totalPeserta').innerText = pesertaList.length;
+
+        // perbarui kode form setelah data berubah
+        updateKodeForm();
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function (m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          return m;
+        });
+      }
+
+      // Tambah peserta
+      function tambahPeserta() {
+        let gedung = document.getElementById('gedung').value; // "A" atau "B"
+        let kodeTes = document.getElementById('kodeTes').value.trim().toUpperCase();
+        let bulan = parseInt(document.getElementById('bulanTes').value);
+        let nama = document.getElementById('nama').value.trim();
+        let alamat = document.getElementById('alamat').value.trim();
+        let nohp = document.getElementById('nohp').value.trim();
+        let mat = parseFloat(document.getElementById('mat').value);
+        let inggris = parseFloat(document.getElementById('inggris').value);
+        let umum = parseFloat(document.getElementById('umum').value);
+
+        // validasi
+        if (kodeTes === '') {
+          alert('Kode Tes wajib diisi (2 karakter, contoh: A2)');
+          return;
+        }
+        if (kodeTes.length !== 2) {
+          alert('Kode Tes harus tepat 2 karakter (huruf+angka). Contoh: A2, B5');
+          return;
+        }
+        if (isNaN(bulan) || bulan < 1 || bulan > 12) {
+          alert('Bulan tes harus 1-12');
+          return;
+        }
+        if (nama === '') {
+          alert('Nama tidak boleh kosong');
+          return;
+        }
+        if (isNaN(mat) || isNaN(inggris) || isNaN(umum)) {
+          alert('Nilai harus angka');
+          return;
+        }
+        if (mat < 0 || mat > 100 || inggris < 0 || inggris > 100 || umum < 0 || umum > 100) {
+          alert('Nilai harus 0-100');
+          return;
+        }
+
+        let nextUrut = getNextUrut();
+        let kodeLengkap = `${kodeTes}-${nextUrut}-${bulan}`;
+
+        let { rata, status } = hitungRataDanStatus(mat, inggris, umum);
+
+        let pesertaBaru = {
+          gedung: gedung,
+          kodeTes: kodeTes,
+          bulan: bulan,
+          nomorUrut: nextUrut,
+          kodeLengkap: kodeLengkap,
+          nama: nama,
+          alamat: alamat,
+          nohp: nohp,
+          mat: mat,
+          inggris: inggris,
+          umum: umum,
+          rata: rata,
+          status: status,
+        };
+
+        pesertaList.push(pesertaBaru);
+        renderTabel();
+
+        // reset form (tapi retain kodeTes, bulan, gedung? biarkan supaya cepat input)
+        document.getElementById('nama').value = '';
+        document.getElementById('alamat').value = '';
+        document.getElementById('nohp').value = '';
+        document.getElementById('mat').value = '70';
+        document.getElementById('inggris').value = '70';
+        document.getElementById('umum').value = '70';
+        document.getElementById('nama').focus();
+        // update kode form akan otomatis dari renderTabel -> updateKodeForm
+      }
+
+      function resetFormOnly() {
+        document.getElementById('kodeTes').value = '';
+        document.getElementById('bulanTes').value = '9';
+        document.getElementById('nama').value = '';
+        document.getElementById('alamat').value = '';
+        document.getElementById('nohp').value = '';
+        document.getElementById('mat').value = '70';
+        document.getElementById('inggris').value = '70';
+        document.getElementById('umum').value = '70';
+        document.getElementById('gedung').value = 'A';
+        updateKodeForm();
+        document.getElementById('nama').focus();
+      }
+
+      function resetSemuaData() {
+        if (confirm('Hapus SEMUA data peserta? Ini permanen.')) {
+          pesertaList = [];
+          renderTabel();
+          updateKodeForm();
+        }
+      }
+
+      // Event listener
+      document.addEventListener('DOMContentLoaded', () => {
+        updateKodeForm();
+        renderTabel();
+
+        document.getElementById('btnTambah').addEventListener('click', tambahPeserta);
+        document.getElementById('btnResetForm').addEventListener('click', resetFormOnly);
+        document.getElementById('btnResetSemua').addEventListener('click', resetSemuaData);
+
+        // Update kode form ketika kodeTes atau bulanTes berubah
+        document.getElementById('kodeTes').addEventListener('input', updateKodeForm);
+        document.getElementById('bulanTes').addEventListener('input', updateKodeForm);
+        document.getElementById('gedung').addEventListener('change', () => {}); // tidak perlu update kode, hanya display gedung
+
+        // Enter key shortcut: tekan enter di field apapun akan tambah data
+        let inputs = ['kodeTes', 'bulanTes', 'nama', 'alamat', 'nohp', 'mat', 'inggris', 'umum'];
+        inputs.forEach((id) => {
+          let el = document.getElementById(id);
+          if (el)
+            el.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                tambahPeserta();
+              }
+            });
+        });
+      });
+    </script>
+  </body>
+</html>
